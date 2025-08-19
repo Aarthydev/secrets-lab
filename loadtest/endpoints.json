@@ -1,0 +1,8 @@
+{
+  "endpoints": [
+    { "url": "https://example.com/", "method": "GET", "headers": {}, "body": "" }
+  ],
+  "rampUpTimeSeconds": 30,
+  "durationSeconds": 60,
+  "virtualUsers": 25
+}
