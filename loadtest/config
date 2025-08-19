@@ -1,0 +1,13 @@
+version: v0.1
+testId: urltest-cicd
+displayName: URL test with criteria and autostop
+description: URL-based load test
+testType: URL
+testPlan: endpoints.json
+engineInstances: 1
+failureCriteria:
+  - avg(response_time_ms) > 3000
+  - percentage(error) > 5
+autoStop:
+  errorPercentage: 50
+  timeWindow: 60
