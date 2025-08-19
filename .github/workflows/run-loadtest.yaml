@@ -1,4 +1,4 @@
-name: Run Azure Load Test
+name: Run Load Test with Secrets and Env
 on: workflow_dispatch
 
 permissions:
@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Azure login (OIDC). If using service principal JSON, replace this step per note below.
+      # Login (OIDC). If you use service principal JSON, replace with creds: ${{ secrets.AZURE_CREDENTIALS }}
       - name: Azure Login
         uses: azure/login@v2
         with:
@@ -19,10 +19,21 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Run Load Test
+      - name: Azure Load Testing
         uses: azure/load-testing@v1
         with:
           loadTestConfigFile: loadtest/loadtest.config.yaml
           loadTestResource: ${{ vars.LOADTEST_RESOURCE_NAME }}
           resourceGroup: ${{ vars.LOADTEST_RESOURCE_GROUP }}
-          loadTestRunName: run-${{ github.run_id }}
+
+          # Pass a secret stored in GitHub
+          secrets: |
+            [
+              { "name": "appToken", "value": "${{ secrets.MY_API_TOKEN }}" }
+            ]
+
+          # Pass a non-sensitive environment variable
+          env: |
+            [
+              { "name": "webapp", "value": "myapp.contoso.com" }
+            ]
